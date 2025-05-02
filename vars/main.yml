@@ -1,0 +1,63 @@
+---
+# vars file for RHEL10-CIS
+
+min_ansible_version: 2.12.1
+rhel10cis_allowed_crypto_policies:
+  - 'DEFAULT'
+  - 'FUTURE'
+  - 'FIPS'
+
+rhel10cis_allowed_crypto_policies_modules:
+  - 'OSPP'
+  - 'AD-SUPPORT'
+  - 'AD-SUPPORT-LEGACY'
+  - 'NO-SHA1'
+  - 'NO-SSHCBC'
+  - 'NO-SSHETM'
+  - 'NO-SSHWEAKCIPHER'
+  - 'NO-SSHWEAKMAC'
+  - 'NO-WEAKMAC'
+
+# Used to control warning summary
+warn_control_list: ""
+warn_count: 0
+
+# Default empty values for 1.4.2
+efi_mount_opts_addition: ''
+
+gpg_key_package: "{{ ansible_facts.distribution | lower }}-gpg-keys"
+
+## Control 6.3.3.x - Audit template
+# This variable governs if the auditd logic should be executed(if value is true).
+# NOTE: The current default value is likely to be overridden(via 'set_fact') by other further tasks(in sub-section 'Auditd rules').
+update_audit_template: false
+
+# Defaults
+## Usage on containerized images
+# The role discovers dynamically (in tasks/main.yml) whether it
+# is executed on a container image and sets the variable
+# system_is_container the true. Otherwise, the default value
+# 'false' is left unchanged.
+system_is_container: false
+# The filename of the existing yml file in role's  'vars/' sub-directory
+# to be used for managing the role-behavior when a container was detected:
+# (de)activating rules or for other tasks(e.g. disabling Selinux or a specific
+# firewall-type).
+container_vars_file: is_container.yml
+# rhel10cis is left off the front of this var for consistency in testing pipeline
+# system_is_ec2 toggle will disable tasks that fail on Amazon EC2 instances. Set true to skip and false to run tasks
+system_is_ec2: false
+
+aide_packages:
+  - aide
+
+# Aide initiate command for new DB creation
+aide_initiate_command: /usr/sbin/aide --init
+
+# List of auditd binary files
+auditd_binaries:
+  - /usr/sbin/auditctl
+  - /usr/sbin/aureport
+  - /usr/sbin/ausearch
+  - /usr/sbin/auditd
+  - /usr/sbin/augenrules

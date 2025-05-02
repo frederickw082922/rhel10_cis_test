@@ -1,0 +1,33 @@
+---
+
+galaxy_info:
+  author: "MindPoint Group"
+  description: "Apply the RHEL 10 CIS"
+  company: "MindPoint Group"
+  license: MIT
+  role_name: rhel10_cis
+  namespace: ansible-lockdown
+  min_ansible_version: 2.12.1
+  platforms:
+    - name: EL
+      versions:
+        - '10'
+  galaxy_tags:
+    - system
+    - security
+    - stig
+    - hardening
+    - benchmark
+    - compliance
+    - redhat
+    - complianceascode
+    - disa
+    - rhel10
+    - cis
+    - rocky
+    - alma
+collections:
+  - community.general
+  - community.crypto
+  - ansible.posix
+dependencies: []
