@@ -326,6 +326,12 @@
     prelim_min_int_uid: "{{ prelim_uid_min_id.stdout | default(min_int_uid) }}"
     prelim_max_int_uid: "{{ prelim_uid_max_id.stdout | default(max_int_uid) }}"
 
+- name: "PRELIM | PATCH | Install ACL if 7.2.8"
+  when: rhel10cis_rule_7_2_8
+  ansible.builtin.package:
+    name: acl
+    state: present
+
 - name: "PRELIM | AUDIT | Gather the package facts after prelim"
   tags: always
   ansible.builtin.package_facts:
