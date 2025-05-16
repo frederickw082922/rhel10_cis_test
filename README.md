@@ -2,10 +2,7 @@
 
 ## Configure a RHEL 10 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
-### NOTE THIS IS NOT OFFICIAL AS NOT YET RELEASED BY CIS - BASED ON EXPECTED AND RHEL9
-    Tested with RHEL10 Beta
-
-
+### NOTE THIS IS NOT OFFICIAL AS NOT YET RELEASED BY CIS - BASED ON RHEL9
 
 #### Based on [CIS RedHat Enterprise Linux 9 Benchmark v2.0.0](https://www.cisecurity.org/cis-benchmarks/)
 
