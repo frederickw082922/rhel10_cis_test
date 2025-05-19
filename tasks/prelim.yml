@@ -259,9 +259,11 @@
   changed_when: false
   register: prelim_auditd_logfile
 
-- name: "PRELIM | AUDIT | Audit conf and rules files | list files
+- name: "PRELIM | AUDIT | Audit conf and rules files | list files"
   when:
-    - rhel10cis_rule_6_3_4_5 or rhel10cis_rule_6_3_4_6 or rhel10cis_rule_6_3_4_7
+    - rhel10cis_rule_6_3_4_5 or
+      rhel10cis_rule_6_3_4_6 or
+      rhel10cis_rule_6_3_4_7
   tags:
     - level2-server
     - level2-workstation
@@ -274,7 +276,7 @@
     path: /etc/audit
     file_type: file
     recurse: true
-    patterns: "*.conf,*.rules"
+    patterns: "*.conf, *.rules"
   register: prelim_auditd_conf_files
 
 - name: "PRELIM | AUDIT | Discover Interactive UID_MIN and UID_MAX from /etc/login.defs"
