@@ -89,8 +89,7 @@
         label: "{{ item.path }}"
 
 - name: "1.2.1.4 | AUDIT | Ensure package manager repositories are configured"
-  when:
-    - rhel10cis_rule_1_2_1_4
+  when: rhel10cis_rule_1_2_1_4
   tags:
     - level1-server
     - level1-workstation

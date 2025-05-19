@@ -149,7 +149,7 @@
     - not system_is_container
   tags: always
   block:
-    - name: "PRELIM | AUDIT | Discover is wirelss adapter on system"
+    - name: "PRELIM | AUDIT | Discover is wireless adapter on system"
       ansible.builtin.shell: find /sys/class/net/*/ -type d -name wireless
       register: discover_wireless_adapters
       changed_when: false
@@ -252,18 +252,14 @@
   become: true
 
 - name: "PRELIM | AUDIT | Discover audit logfile"
-  when:
-    - rhel10cis_rule_6_3_4_1 or rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
+  when: rhel10cis_rule_6_3_4_1 or rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
   tags: always
   ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
   changed_when: false
   register: prelim_auditd_logfile
 
 - name: "PRELIM | AUDIT | Audit conf and rules files | list files"
-  when:
-    - rhel10cis_rule_6_3_4_5 or
-      rhel10cis_rule_6_3_4_6 or
-      rhel10cis_rule_6_3_4_7
+  when: rhel10cis_rule_6_3_4_5 or rhel10cis_rule_6_3_4_6 or rhel10cis_rule_6_3_4_7
   tags:
     - level2-server
     - level2-workstation
