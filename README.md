@@ -99,17 +99,17 @@ Note: More tests are run during audit as we check config and running state.
 
 ```txt
 
-ok: [default] => {
+ok: [rhel10_bios] => {
     "msg": [
-        "The pre remediation results are: ['Total Duration: 5.454s', 'Count: 338, Failed: 47, Skipped: 5'].",
-        "The post remediation results are: ['Total Duration: 5.007s', 'Count: 338, Failed: 46, Skipped: 5'].",
-        "Full breakdown can be found in /var/tmp",
+        "The audit results are: Count: 800, Failed: 23, Skipped: 4, Duration: 128.649s",
+        "",
+        "Full breakdown can be found in /opt",
         ""
     ]
 }
 
 PLAY RECAP *******************************************************************************************************************************************
-default                    : ok=270  changed=23   unreachable=0    failed=0    skipped=140  rescued=0    ignored=0
+rhel10_bios                : ok=20   changed=1    unreachable=0    failed=0    skipped=20   rescued=0    ignored=0
 ```
 
 ## Documentation
@@ -146,7 +146,7 @@ This role is designed that the end user should not have to edit the tasks themse
 
 ## Tags
 
-There are many tags available for added control precision. Each control has it's own set of tags noting what level, if it's scored/notscored, what OS element it relates to, if it's a patch or audit, and the rule number.
+There are many tags available for added control precision. Each control has it's own set of tags noting what level, what OS element it relates to, if it's a patch or audit, and the rule number.
 
 Below is an example of the tag section from a control within this role. Using this example if you set your run to skip all controls with the tag services, this task will be skipped. The opposite can also happen where you run only controls tagged with services.
 
