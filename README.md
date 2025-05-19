@@ -174,7 +174,7 @@ We encourage you (the community) to contribute to this role. Please read the rul
 
 Almalinux BaseOS, EPEL and many cloud providers repositories, do not allow gpgcheck(rule_1.2.1.2) or repo_gpgcheck (rule_1.2.1.3) this will cause issues during the playbook unless or a workaround is found.
 
-Audit - Running the audit sees an Increased RAM usage, improvements seen when dropping swappiness e.g. 5. Already improved by latest kernel update 6.12.0-55.12.1 as of 19-05-25
+Audit - Running the audit sees an Increased RAM usage, improvements seen when dropping swappiness e.g. 5. Already improved by latest kernel update 6.12.0-55.12.1 as of 19-05-25 - appears to be systemd-userdbd issues
 
 ## Pipeline Testing
 
