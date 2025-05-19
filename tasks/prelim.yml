@@ -82,33 +82,6 @@
       ansible.builtin.debug:
         msg: "{{ prelim_mount_point_fs_and_options }}"
 
-- name: "PRELIM | PATCH | Update to latest gpg keys"
-  when:
-    - rhel10cis_rule_1_2_1_1
-    - ansible_facts.distribution != 'RedHat'
-    - ansible_facts.distribution != 'OracleLinux'
-  ansible.builtin.package:
-    name: "{{ gpg_key_package }}"
-    state: latest
-
-- name: "PRELIM | AUDIT | Import gpg keys | RedHat Only"
-  when:
-    - rhel10cis_rule_1_2_1_1
-    - rhel10cis_force_gpg_key_import
-    - ansible_facts.distribution == 'RedHat'
-  block:
-    - name: "PRELIM | AUDIT | Import gpg keys | get data"
-      ansible.builtin.command: rpm -q gpg-pubkey --qf '%{NAME}-%{VERSION}-%{RELEASE}\t%{SUMMARY}\n' # noqa command-instead-of-module
-      changed_when: false
-      failed_when: false
-      register: prelim_check_gpg_imported
-
-    - name: "PRELIM | PATCH | Force keys to be imported"
-      when: "os_gpg_key_pubkey_content not in prelim_check_gpg_imported.stdout"
-      ansible.builtin.rpm_key:
-        key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
-        state: present
-
 - name: "PRELIM | PATCH | Setup crypto-policy"
   when: rhel10cis_rule_1_6_1
   tags:
@@ -286,7 +259,7 @@
   changed_when: false
   register: prelim_auditd_logfile
 
-- name: "PRELIM | AUDIT | Audit conf and rules files | list files"
+- name: "PRELIM | AUDIT | Audit conf and rules files | list files
   when:
     - rhel10cis_rule_6_3_4_5 or rhel10cis_rule_6_3_4_6 or rhel10cis_rule_6_3_4_7
   tags:
