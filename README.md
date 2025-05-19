@@ -174,6 +174,8 @@ We encourage you (the community) to contribute to this role. Please read the rul
 
 Almalinux BaseOS, EPEL and many cloud providers repositories, do not allow gpgcheck(rule_1.2.1.2) or repo_gpgcheck (rule_1.2.1.3) this will cause issues during the playbook unless or a workaround is found.
 
+Audit - Running the audit sees an Increased RAM usage, improvements seen when dropping swappiness e.g. 5. Already improved by latest kernel update 6.12.0-55.12.1 as of 19-05-25
+
 ## Pipeline Testing
 
 uses:
@@ -182,27 +184,6 @@ uses:
 - ansible collections - pulls in the latest version based on requirements file
 - runs the audit using the devel branch
 - This is an automated test that occurs on pull requests into devel
-
-## Local Testing
-
-Molecule can be used to work on this role and test in distinct _scenarios_.
-
-### examples
-
-```bash
-molecule test -s default
-molecule converge -s wsl -- --check
-molecule verify -s localhost
-```
-
-local testing uses:
-
-- ansible 2.13.3
-- molecule 4.0.1
-- molecule-docker 2.0.0
-- molecule-podman 2.0.2
-- molecule-vagrant 1.0.0
-- molecule-azure 0.5.0
 
 ## Added Extras
 
