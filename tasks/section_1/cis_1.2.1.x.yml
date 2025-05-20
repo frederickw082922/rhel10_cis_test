@@ -25,8 +25,7 @@
       register: discovered_os_gpg_key_check
 
     - name: "1.2.1.1 | AUDIT | Ensure GPG keys are configured | expected keys fail"
-      when:
-        - discovered_os_installed_pub_keys.rc == 1 or discovered_os_gpg_key_check.rc == 1
+      when: discovered_os_installed_pub_keys.rc == 1 or discovered_os_gpg_key_check.rc == 1
       ansible.builtin.fail:
         msg: Installed GPG Keys do not meet expected values or expected keys are not installed
 
