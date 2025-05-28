@@ -1,6 +1,8 @@
 ---
 - name: "6.2.3.1 | PATCH | Ensure rsyslog installed"
-  when: rhel10cis_rule_6_2_3_1
+  when:
+    - rhel10cis_rule_6_2_3_1
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -15,7 +17,9 @@
     state: present
 
 - name: "6.2.3.2 | PATCH | Ensure rsyslog Service is enabled and active"
-  when: rhel10cis_rule_6_2_3_2
+  when:
+    - rhel10cis_rule_6_2_3_2
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -31,7 +35,9 @@
     state: started
 
 - name: "6.2.3.3 | PATCH | Ensure journald is configured to send logs to rsyslog"
-  when: rhel10cis_rule_6_2_3_3
+  when:
+    - rhel10cis_rule_6_2_3_3
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -49,7 +55,9 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.4 | PATCH | Ensure rsyslog log file creation mode is configured"
-  when: rhel10cis_rule_6_2_3_4
+  when:
+    - rhel10cis_rule_6_2_3_4
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -66,7 +74,9 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.5 | PATCH | Ensure logging is configured"
-  when: rhel10cis_rule_6_2_3_5
+  when:
+    - rhel10cis_rule_6_2_3_5
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -91,7 +101,6 @@
           - "{{ discovered_configured_rsyslog.stdout_lines }}"
 
     - name: "6.2.3.5 | PATCH | Ensure logging is configured | mail.* log setting"
-      when: rhel10cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         marker: "# {mark} MAIL LOG SETTINGS - CIS benchmark - Ansible-lockdown"
@@ -105,7 +114,6 @@
       notify: Restart rsyslog
 
     - name: "6.2.3.5 | PATCH | Ensure logging is configured | news.crit log setting"
-      when: rhel10cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         state: present
@@ -118,7 +126,6 @@
       notify: Restart rsyslog
 
     - name: "6.2.3.5 | PATCH | Ensure logging is configured | Misc. log setting"
-      when: rhel10cis_rsyslog_ansiblemanaged
       ansible.builtin.blockinfile:
         path: /etc/rsyslog.conf
         state: present
@@ -172,6 +179,7 @@
   when:
     - rhel10cis_rule_6_2_3_6
     - rhel10cis_remote_log_server
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -193,7 +201,9 @@
   notify: Restart rsyslog
 
 - name: "6.2.3.7 | PATCH | Ensure rsyslog is not configured to recieve logs from a remote client"
-  when: rhel10cis_rule_6_2_3_7
+  when:
+    - rhel10cis_rule_6_2_3_7
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
@@ -230,7 +240,9 @@
         - "InputTCPServerRun"
 
 - name: "6.2.3.8 | PATCH | Ensure rsyslog logrotate is configured"
-  when: rhel10cis_rule_6_2_3_8
+  when:
+    - rhel10cis_rule_6_2_3_8
+    - rhel10cis_rsyslog_ansiblemanaged
   tags:
     - level1-server
     - level1-workstation
