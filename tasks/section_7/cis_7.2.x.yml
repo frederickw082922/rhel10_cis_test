@@ -278,7 +278,7 @@
     warn_control_id: '7.2.9'
   block:
     - name: "7.2.9 | AUDIT | Ensure local interactive user dot files access is configured"
-      ansible.builtin.shell: find {{ prelim_interactive_users_home.stdout_lines | list  | join(' ') }} -name "\.*" -type f
+      ansible.builtin.shell: find {{ prelim_interactive_users_home.stdout_lines | list | join(' ') }} -name "\.*" -type f
       changed_when: false
       failed_when: discovered_homedir_hidden_files.rc not in [ 0, 1 ]
       check_mode: false
