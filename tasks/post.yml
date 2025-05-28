@@ -2,8 +2,7 @@
 # Post tasks
 
 - name: POST | Gather the package facts after remediation
-  tags:
-    - always
+  tags: always
   ansible.builtin.package_facts:
     manager: auto
 
