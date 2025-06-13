@@ -1,4 +1,5 @@
 ---
+
 - name: "7.1.1 | PATCH | Ensure permissions on /etc/passwd are configured"
   when: rhel10cis_rule_7_1_1
   tags:
@@ -55,7 +56,7 @@
     - level1-server
     - level1-workstation
     - patch
-    - permissionss
+    - permissions
     - rule_7.1.4
     - NIST800-53R5_AC-3
     - NIST800-53R5_MP-2

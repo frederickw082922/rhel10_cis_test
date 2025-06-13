@@ -211,6 +211,15 @@
     mode: 'u-x,go-rwx'
     state: touch
 
+- name: "PRELIM | PATCH | sshd_config.d/50-redhat.conf exists"
+  when:
+    - rhel10cis_rule_5_1_10 or
+      rhel10cis_rule_5_1_11
+  tags: always
+  ansible.builtin.stat:
+    path: /etc/ssh/sshd_config.d/50-redhat.conf
+  register: prelim_sshd_50_redhat_file
+
 - name: "PRELIM | AUDIT | Gather UID 0 accounts other than root"
   when: rhel10cis_rule_5_4_2_1
   tags:
@@ -262,8 +271,7 @@
   become: true
 
 - name: "PRELIM | AUDIT | Discover audit logfile"
-  when:
-    - rhel10cis_rule_6_3_4_1 or rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
+  when: rhel10cis_rule_6_3_4_1 or rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
   tags: always
   ansible.builtin.shell: grep ^log_file /etc/audit/auditd.conf | awk '{ print $NF }'
   changed_when: false
@@ -271,10 +279,7 @@
   register: prelim_auditd_logfile
 
 - name: "PRELIM | AUDIT | Audit conf and rules files | list files"
-  when:
-    - rhel10cis_rule_6_3_4_5 or
-      rhel10cis_rule_6_3_4_6 or
-      rhel10cis_rule_6_3_4_7
+  when: rhel10cis_rule_6_3_4_5 or rhel10cis_rule_6_3_4_6 or rhel10cis_rule_6_3_4_7
   tags:
     - level2-server
     - level2-workstation

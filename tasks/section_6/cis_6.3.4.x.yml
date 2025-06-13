@@ -1,4 +1,5 @@
 ---
+
 - name: "6.3.4.1 | PATCH | Ensure the audit log file directory mode is configured"
   when: rhel10cis_rule_6_3_4_1
   tags:
@@ -17,8 +18,7 @@
     "6.3.4.2 | PATCH | Ensure audit log files mode is configured"
     "6.3.4.3 | PATCH | Ensure audit log files owner is configured"
     "6.3.4.4 | PATCH | Ensure only authorized groups are assigned ownership of audit log files"
-  when:
-    - rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
+  when: rhel10cis_rule_6_3_4_2 or rhel10cis_rule_6_3_4_3 or rhel10cis_rule_6_3_4_4
   tags:
     - level2-server
     - level2-workstation
