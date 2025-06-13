@@ -278,12 +278,14 @@
         validate: sshd -t -f %s
       notify: Restart sshd
 
-    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override"
+    - name: "5.1.10 | PATCH | Ensure sshd DisableForwarding is enabled | override if redhat file exists"
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config.d/50-redhat.conf
         regexp: (?i)^(#|)\s*X11Forwarding
         line: 'X11Forwarding {{ rhel10cis_sshd_x11forwarding }}'
         validate: sshd -t -f %s
+      failed_when: discovered_redhat_conf_exists.rc not in [ 0, 257 ]
+      register: discovered_redhat_conf_exists
       notify: Restart sshd
 
 - name: "5.1.11 | PATCH | Ensure sshd GSSAPIAuthentication is disabled"
