@@ -4,6 +4,7 @@
 ## 0.1.2
 Update to audit_only to allow fetching results
 resolved false warning for fetch audit
+Improved documentation and variable compilation for crypto policies
 
 ## 0.1.1 RHEL10 - updates
 Thanks to @polski-g several issues and improvements added
