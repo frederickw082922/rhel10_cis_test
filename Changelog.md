@@ -6,6 +6,7 @@ Aligned with public RHEL9 fixes
 5.4.2.5 - Enhancement for none existing directories thanks to @DianaMariaDDM
 6.3.4.5 - fixed audit file permissions inline thanks to @DianaMariaDDM
 6.3.3.5 - added missing locations for audit
+Added fix for yescrypt and root password check thanks to miso321
 
 ## 0.1.2
 Update to audit_only to allow fetching results
