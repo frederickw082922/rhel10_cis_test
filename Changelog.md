@@ -9,7 +9,7 @@ Aligned with public RHEL9 fixes
 
 ## 0.1.2
 Update to audit_only to allow fetching results
-resolved false warning for fetch audit
+resolved false warning for fetch auditq
 Improved documentation and variable compilation for crypto policies
 
 ## 0.1.1 RHEL10 - updates
