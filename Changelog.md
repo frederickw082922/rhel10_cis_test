@@ -1,6 +1,12 @@
 # Changes to rhel10CIS
 
 
+## 0.1.3
+Aligned with public RHEL9 fixes
+5.4.2.5 - Enhancement for none existing directories thanks to @DianaMariaDDM
+6.3.4.5 - fixed audit file permissions inline thanks to @DianaMariaDDM
+6.3.3.5 - added missing locations for audit
+
 ## 0.1.2
 Update to audit_only to allow fetching results
 resolved false warning for fetch audit
