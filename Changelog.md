@@ -1,6 +1,21 @@
 # Changes to rhel10CIS
 
 
+## 0.1.4
+pre-commit updates
+
+thanks to @DianaMariaDDM
+- Improvements in defaults main
+- typo fixes
+thanks to @thuliumdrake
+- 1.4.1 Ability to use grub filter to create a password
+thanks to @chrispipo
+- rsyslog ordering
+#thanks to @polski-g
+- gdm logic for graphical desktop
+
+
+
 ## 0.1.3
 Aligned with public RHEL9 fixes
 5.4.2.5 - Enhancement for none existing directories thanks to @DianaMariaDDM
