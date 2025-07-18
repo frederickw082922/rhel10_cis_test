@@ -50,7 +50,7 @@
     - NIST800-53R5_AU-12
     - NIST800-53R5_MP-2
   ansible.builtin.lineinfile:
-    path: /etc/systemd/journald.conf
+    path: /usr/lib/systemd/journald.conf
     regexp: "^#ForwardToSyslog=|^ForwardToSyslog="
     line: ForwardToSyslog=yes
   notify: Restart rsyslog
