@@ -3,6 +3,7 @@
 
 ## 0.1.4
 pre-commit updates
+6.2.3.3 updated path for journald.conf
 
 thanks to @DianaMariaDDM
 - Improvements in defaults main
