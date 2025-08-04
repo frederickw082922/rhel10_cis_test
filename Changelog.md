@@ -8,8 +8,6 @@ pre-commit updates
 thanks to @DianaMariaDDM
 - Improvements in defaults main
 - typo fixes
-thanks to @thuliumdrake
-- 1.4.1 Ability to use grub filter to create a password
 thanks to @chrispipo
 - rsyslog ordering
 #thanks to @polski-g
