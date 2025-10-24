@@ -1,0 +1,115 @@
+---
+# GitHub Actions Workflow: Auto-approve and merge pre-commit version updates
+# 
+# Purpose: This workflow automatically approves and merges pull requests created by the
+# pre-commit-ci bot when they only modify the .pre-commit-config.yaml file. This is useful
+# for keeping pre-commit hooks up to date without manual intervention while ensuring safety
+# by only auto-merging changes to the pre-commit configuration file.
+
+name: Auto-approve and merge pre-commit version updates
+
+# Trigger conditions: This workflow runs when pull requests are opened, updated (synchronize),
+# or reopened. It does NOT run on draft PRs being marked as ready or on PR edits.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# Define permissions for the GITHUB_TOKEN used in this workflow
+# These follow the principle of least privilege - only granting what's necessary
+permissions:
+  contents: write        # Required to merge the PR into the base branch
+  pull-requests: write   # Required to approve the PR and add comments
+  checks: read           # Required to check the status of CI/CD checks before merging
+
+jobs:
+  # Main job that handles the entire auto-approval and merge process
+  auto-approve-merge:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner (GitHub-hosted)
+
+    steps:
+      # Step 1: Verify that the PR was created by the pre-commit-ci bot
+      # This is a security measure to ensure we only auto-merge bot PRs
+      - name: Check PR author
+        id: check_author  # Identifier used to reference this step's outputs in later steps
+        run: |
+          # Compare the actor (PR creator) with the expected bot username
+          if [[ "${{ github.actor }}" == "pre-commit-ci[bot]" ]]; then
+            # Set output variable to true if it's the pre-commit bot
+            echo "is_precommit_bot=true" >> $GITHUB_OUTPUT
+          else
+            # Set output variable to false for any other user/bot
+            echo "is_precommit_bot=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 2: Clone the repository to analyze the changes
+      # This step only runs if the previous step confirmed it's the pre-commit bot
+      - name: Checkout code
+        if: steps.check_author.outputs.is_precommit_bot == 'true'
+        uses: actions/checkout@main  # Use the main branch of the checkout action
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags (needed for git diff)
+
+      # Step 3: Verify that ONLY the .pre-commit-config.yaml file was modified
+      # This is a critical safety check to prevent auto-merging unintended changes
+      - name: Check if only .pre-commit-config.yaml changed
+        if: steps.check_author.outputs.is_precommit_bot == 'true'
+        id: check_changes
+        run: |
+          # Get the list of files changed between the base branch and the PR head
+          # origin/${{ github.base_ref }} is the target branch (e.g., main)
+          # HEAD is the current PR branch
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          echo "Changed files: $changed_files"  # Log for debugging purposes
+
+          # Check if the ONLY changed file is .pre-commit-config.yaml
+          if [[ "$changed_files" == ".pre-commit-config.yaml" ]]; then
+            echo "only_precommit=true" >> $GITHUB_OUTPUT
+          else
+            # If other files changed, don't auto-merge (requires manual review)
+            echo "only_precommit=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 4: Automatically approve the PR
+      # Only runs if all previous checks passed (bot author + only pre-commit config changed)
+      - name: Auto-approve PR
+        if: steps.check_changes.outputs.only_precommit == 'true'
+        uses: hmarr/auto-approve-action@v4  # Third-party action for PR approval
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}  # Use the automatic GitHub token
+
+      # Step 5: Add an informative comment to the PR
+      # This provides transparency about what the workflow is doing
+      - name: Add comment on PR
+        if: steps.check_changes.outputs.only_precommit == 'true'
+        uses: actions/github-script@main  # Allows running custom JavaScript in the workflow
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            # Use the GitHub REST API to create a comment on the PR
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,  # PR number from the event context
+              owner: context.repo.owner,            # Repository owner
+              repo: context.repo.repo,              # Repository name
+              body: "✅ Auto-approved pre-commit version update. Merging after checks pass."
+            })
+
+      # Step 6: Wait for all CI/CD checks to complete successfully
+      # This ensures we don't merge a PR that breaks tests or other quality checks
+      - name: Wait for all checks to pass
+        if: steps.check_changes.outputs.only_precommit == 'true'
+        uses: lewagon/wait-on-check-action@master
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}  # The commit SHA to check
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 20  # Check status every 20 seconds
+          allowed-conclusions: success  # Only proceed if all checks succeed (not skipped/neutral)
+
+      # Step 7: Automatically merge the PR
+      # This is the final step, only executed after all checks pass
+      - name: Auto-merge PR
+        if: steps.check_changes.outputs.only_precommit == 'true'
+        uses: pascalgn/automerge-action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash  # Squash all commits into a single commit on merge
+          # Other options: merge (creates merge commit), rebase (rebases commits)
