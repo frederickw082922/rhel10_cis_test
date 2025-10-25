@@ -1,6 +1,6 @@
 ---
+
 # GitHub Actions Workflow: Auto-approve and merge pre-commit version updates
-# 
 # Purpose: This workflow automatically approves and merges pull requests created by the
 # pre-commit-ci bot when they only modify the .pre-commit-config.yaml file. This is useful
 # for keeping pre-commit hooks up to date without manual intervention while ensuring safety
