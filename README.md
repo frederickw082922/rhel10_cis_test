@@ -1,5 +1,7 @@
 # RHEL 10 CIS
 
+[![Auto-approve and merge pre-commit version updates](https://github.com/frederickw082922/RHEL10-CIS/actions/workflows/auto-pre-commit-merge.yml/badge.svg)](https://github.com/frederickw082922/RHEL10-CIS/actions/workflows/auto-pre-commit-merge.yml)
+
 ## Configure a RHEL 10 machine to be [CIS](https://www.cisecurity.org/cis-benchmarks/) compliant
 
 ### NOTE THIS IS NOT OFFICIAL AS NOT YET RELEASED BY CIS - BASED ON RHEL9
