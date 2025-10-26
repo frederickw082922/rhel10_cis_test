@@ -64,14 +64,7 @@ jobs:
       - name: Set up Python environment
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' # Pinned version for consistency and reliability
-          # Using specific version prevents unexpected breakages from Python updates
-          # Python 3.11 offers good performance and long-term support
-          # Enable pip caching to speed up subsequent workflow runs
-          cache: 'pip'
-          cache-dependency-path: |
-            **/requirements*.txt
-            **/constraints.txt
+          python-version: '3.11'
       # ------------------------------------------------------------------------
       # STEP 3: Install Ansible
       # ------------------------------------------------------------------------
