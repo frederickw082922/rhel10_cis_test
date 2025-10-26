@@ -1,12 +1,12 @@
 ---
 
 galaxy_info:
-  author: "MindPoint Group"
-  description: "Apply the RHEL 10 CIS"
-  company: "MindPoint Group"
+  author: "Tyto Athene"
+  description: "Apply the RHEL 10 CIS - Test"
+  company: "Tyto Athene"
   license: MIT
-  role_name: rhel10_cis
-  namespace: ansible-lockdown
+  role_name: rhel10_cis_test
+  namespace: frederickw082922
   min_ansible_version: 2.12.1
   platforms:
     - name: EL

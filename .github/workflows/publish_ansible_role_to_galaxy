@@ -1,0 +1,136 @@
+---
+
+# ============================================================================
+# GitHub Actions Workflow: Publish Ansible Role to Galaxy
+# ============================================================================
+# PURPOSE:
+#   Automates the publication of Ansible roles to Ansible Galaxy whenever push
+#   to main branch. This ensures the Galaxy role stays synched
+#   with GitHub releases without manual intervention.
+# PREREQUISITES:
+#   1. Ansible Galaxy account at https://galaxy.ansible.com/
+#   2. Galaxy API key stored as GitHub secret: ANSIBLE_GALAXY_API_KEY
+#      - Get your key from: https://galaxy.ansible.com/me/preferences
+#      - Add to GitHub: Repository Settings → Secrets → Actions → New secret
+#   3. Repository name matching your intended Galaxy role name
+# GALAXY ROLE NAMING:
+#   Published as: <namespace>.<repository_name>
+#   Users install with: ansible-galaxy install <namespace>.<repository_name>
+# ============================================================================
+name: Publish Ansible Role to Galaxy
+# ----------------------------------------------------------------------------
+# WORKFLOW TRIGGERS
+# ----------------------------------------------------------------------------
+# Only executes when push to main
+on:
+  push:
+    branches:
+      - main
+# ----------------------------------------------------------------------------
+# SECURITY: Permissions Configuration
+# ----------------------------------------------------------------------------
+# Explicitly define minimal required permissions (principle of least privilege)
+# This protects against token misuse if workflow is compromised
+permissions:
+  contents: read # Only need to read repository contents
+  # No write permissions needed since we're only publishing externally
+jobs:
+  # ==========================================================================
+  # JOB: Validate, Build, and Publish to Ansible Galaxy
+  # ==========================================================================
+  galaxy:
+    name: Publish to Ansible Galaxy
+    runs-on: ubuntu-latest
+    # Optional: Set a timeout to prevent hung jobs from consuming resources
+    timeout-minutes: 10
+    steps:
+      # ------------------------------------------------------------------------
+      # STEP 1: Repository Checkout
+      # ------------------------------------------------------------------------
+      # Downloads the complete repository at the specific tag that triggered
+      # this workflow. This ensures we publish exactly what was tagged.
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for all branches and tags
+          # Required if you need complete git history for changelog generation
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+      # ------------------------------------------------------------------------
+      # STEP 2: Python Environment Setup
+      # ------------------------------------------------------------------------
+      # Installs Python runtime required for Ansible and ansible-galaxy CLI
+      # Python 3.x is needed because Ansible is written in Python
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # Pinned version for consistency and reliability
+          # Using specific version prevents unexpected breakages from Python updates
+          # Python 3.11 offers good performance and long-term support
+          # Enable pip caching to speed up subsequent workflow runs
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+            **/constraints.txt
+      # ------------------------------------------------------------------------
+      # STEP 3: Install Ansible
+      # ------------------------------------------------------------------------
+      # Installs Ansible package which includes ansible-galaxy CLI tool
+      # This tool communicates with Ansible Galaxy API for role publication
+      - name: Install Ansible and dependencies
+        run: |
+          # Upgrade pip to latest version for security and compatibility
+          python -m pip install --upgrade pip
+          # Install Ansible with specific version for reproducibility
+          # Using version constraint ensures consistent behavior across runs
+          pip install 'ansible>=11.0,<13.0'
+          # Verify installation and display versions for debugging
+          echo "✓ Ansible installation complete"
+          ansible --version
+          ansible-galaxy --version
+      # ------------------------------------------------------------------------
+      # STEP 4: Publish to Ansible Galaxy
+      # ------------------------------------------------------------------------
+      # Imports the role from GitHub to Ansible Galaxy, making it publicly
+      # available for installation via ansible-galaxy install command
+      - name: Publish role to Ansible Galaxy
+        env:
+          # API key for authentication with Ansible Galaxy
+          # Retrieved from GitHub secrets - NEVER hardcode credentials
+          ANSIBLE_GALAXY_API_KEY: ${{ secrets.ANSIBLE_GALAXY_API_KEY }}
+        run: |
+          echo "🚀 Publishing role to Ansible Galaxy..."
+          # Extract GitHub username/organization (namespace)
+          NAMESPACE="${{ github.repository_owner }}"
+          # Extract repository name (role name)
+          ROLE_NAME="${{ github.event.repository.name }}"
+          echo "  Namespace: $NAMESPACE"
+          echo "  Role Name: $ROLE_NAME"
+          echo "  Version: ${{ steps.version.outputs.version }}"
+          # Execute ansible-galaxy role import command
+          # This pulls the role from GitHub and publishes it to Galaxy
+          ansible-galaxy role import \
+            --api-key "$ANSIBLE_GALAXY_API_KEY" \
+            "$NAMESPACE" \
+            "$ROLE_NAME"
+          # ansible-galaxy role import performs these actions:
+          # 1. Authenticates with Galaxy using your API key
+          # 2. Downloads the role content from GitHub
+          # 3. Processes and indexes the role on Galaxy
+          # 4. Makes the role available for installation
+          # Published role will be available at:
+          # https://galaxy.ansible.com/$NAMESPACE/$ROLE_NAME
+          # Users can install with:
+          # ansible-galaxy install $NAMESPACE.$ROLE_NAME
+          echo "✅ Role successfully published to Ansible Galaxy!"
+          echo "📍 Available at: https://galaxy.ansible.com/$NAMESPACE/$ROLE_NAME"
+          echo "📦 Install with: ansible-galaxy install $NAMESPACE.$ROLE_NAME"
+      # ------------------------------------------------------------------------
+      # STEP 5: Notification
+      # ------------------------------------------------------------------------
+      # Send notification on successful publication
+      # Useful for team awareness and audit trails
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "::notice title=Galaxy Publication::Role successfully published to Ansible Galaxy at version ${{ steps.version.outputs.version }}"
