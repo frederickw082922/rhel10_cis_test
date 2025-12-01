@@ -14,6 +14,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+# Allow manual running of workflow
+  workflow_dispatch:
+
 # Define permissions for the GITHUB_TOKEN used in this workflow
 # These follow the principle of least privilege - only granting what's necessary
 permissions:
